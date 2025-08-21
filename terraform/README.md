@@ -1,4 +1,4 @@
-# OCI ExaScale 23ai Terraform Stack
+# TODO: OCI ExaScale 23ai Terraform Stack
 
 This stack creates the smallest ExaScale 23ai database and a Data Guard standby on Oracle Cloud Infrastructure.
 
