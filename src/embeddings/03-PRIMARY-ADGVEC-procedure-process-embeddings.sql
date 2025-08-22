@@ -19,18 +19,21 @@ CREATE OR REPLACE PROCEDURE process_embeddings (
                vector_embedding(clipimg USING img AS data) AS embed_vector
         FROM cats c
         LEFT OUTER JOIN cats_vec_clipimg v ON c.id = v.id
-        WHERE v.id IS NULL AND c.img IS NOT NULL;
+        WHERE v.id IS NULL AND c.img IS NOT NULL and c.id IS NOT NULL;
 BEGIN
     OPEN c_embeddings;
+
+    EXECUTE IMMEDIATE 'ALTER SESSION ENABLE ADG_REDIRECT_DML';
 
     LOOP
         FETCH c_embeddings BULK COLLECT INTO v_embeddings LIMIT p_batch_size;
         EXIT WHEN v_embeddings.COUNT = 0;
 
-        FORALL i IN 1 .. v_embeddings.COUNT
+        FOR i IN v_embeddings.FIRST .. v_embeddings.LAST LOOP
+            DBMS_OUTPUT.PUT_LINE(   'Processing ID: ' || v_embeddings(i).id);
             INSERT INTO cats_vec_clipimg (id, embedding)
             VALUES (v_embeddings(i).id, v_embeddings(i).embed_vector);
-
+        END LOOP;
         COMMIT;
 
         v_total_processed := v_total_processed + v_embeddings.COUNT;

@@ -1,6 +1,6 @@
 /*
 run as : adgvec
-scope  : pdb 
+scope  : primary PDB 
 */
 BEGIN
   DBMS_VECTOR.LOAD_ONNX_MODEL('ONNX','clip_img.onnx','clipimg');

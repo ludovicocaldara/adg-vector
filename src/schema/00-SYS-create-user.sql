@@ -16,3 +16,5 @@ grant keep sysguid to vec_role;
 grant vec_role to adgvec;
 alter user adgvec quota unlimited on users;
 grant execute on dbms_cloud to adgvec;
+-- we don't use database links as distributed transactions don't work with DML redirection
+-- grant create database link to adgvec;
