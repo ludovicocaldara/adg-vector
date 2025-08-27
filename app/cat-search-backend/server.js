@@ -70,15 +70,14 @@ app.post('/api/search', async (req, res) => {
       searchText: searchText.trim(),
       limit: limit
     });
-    
+
     // Convert results to frontend format
     const searchResults = result.rows.map(row => ({
       id: row[0],
-      imageData: `data:image/jpeg;base64,${row[1].toString('base64')}`,
+      imageData: `data:image/jpeg;base64,${Buffer.from(row[1]).toString('base64')}`,
       imageSize: row[2],
       similarityDistance: row[3],
-      // Convert distance to similarity percentage (lower distance = higher similarity)
-      similarityScore: Math.max(0, (2 - row[3]) / 2) // Normalize to 0-1 range
+      similarityScore: Math.max(0, (2 - row[3]) / 2)
     }));
     
     res.json({
@@ -140,4 +139,5 @@ process.on('SIGINT', async () => {
   process.exit(0);
 });
 
+startServer().catch(console.error);
 startServer().catch(console.error);
