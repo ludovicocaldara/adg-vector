@@ -100,14 +100,17 @@ const CatImageSearch = () => {
   };
 
   const getCatImage = (cat) => {
-    return cat.imageData; // This is now base64 data from the database
+    // If imageData already starts with 'data:', return as is
+    if (cat.imageData.startsWith('data:')) return cat.imageData;
+    // Otherwise, assume JPEG and prepend the data URL prefix
+    return `data:image/jpeg;base64,${cat.imageData}`;
   };
 
   const downloadImage = (cat) => {
     try {
-      // Create download link for base64 image
+      const imageUrl = getCatImage(cat);
       const link = document.createElement('a');
-      link.href = cat.imageData;
+      link.href = imageUrl;
       link.download = `cat-${cat.id}.jpg`;
       document.body.appendChild(link);
       link.click();
