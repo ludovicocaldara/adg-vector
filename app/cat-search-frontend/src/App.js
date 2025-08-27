@@ -2,27 +2,6 @@ import React, { useState } from 'react';
 import { Search, Image, Loader2, Heart, Download } from 'lucide-react';
 import './App.css';
 
-// Calculate cosine similarity between two vectors (keeping for reference, not used with real API)
-const cosineSimilarity = (a, b) => {
-  if (a.length !== b.length) return 0;
-  
-  let dotProduct = 0;
-  let normA = 0;
-  let normB = 0;
-  
-  for (let i = 0; i < a.length; i++) {
-    dotProduct += a[i] * b[i];
-    normA += a[i] * a[i];
-    normB += b[i] * b[i];
-  }
-  
-  normA = Math.sqrt(normA);
-  normB = Math.sqrt(normB);
-  
-  if (normA === 0 || normB === 0) return 0;
-  return dotProduct / (normA * normB);
-};
-
 const CatImageSearch = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [isSearching, setIsSearching] = useState(false);
@@ -39,7 +18,7 @@ const CatImageSearch = () => {
 
     setIsSearching(true);
     setError(null);
-    
+
     try {
       const response = await fetch('http://localhost:3001/api/search', {
         method: 'POST',
@@ -50,14 +29,18 @@ const CatImageSearch = () => {
           searchText: query,
           limit: 12 
         }),
+        // Add this if you are running frontend and backend on different hosts/ports and need credentials
+        // credentials: 'include',
       });
-      
+
+      // Add this block to help debug CORS/network issues
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        const text = await response.text();
+        throw new Error(`HTTP error! status: ${response.status}, body: ${text}`);
       }
-      
+
       const data = await response.json();
-      
+
       if (data.success) {
         // Convert the results to match our component expectations
         const formattedResults = data.results.map(result => ({
@@ -65,10 +48,9 @@ const CatImageSearch = () => {
           imageData: result.imageData,
           imageSize: result.imageSize,
           similarityDistance: result.similarityDistance,
-          similarity: result.similarityScore, // This is the normalized 0-1 score
+          similarity: result.similarityScore,
           description: `Cat #${result.id} (${(result.imageSize / 1024).toFixed(1)}KB)`
         }));
-        
         setSearchResults(formattedResults);
       } else {
         console.error('Search error:', data.error);
@@ -76,8 +58,9 @@ const CatImageSearch = () => {
         setSearchResults([]);
       }
     } catch (error) {
+      // Show more details for fetch/network/CORS errors
       console.error('Search error:', error);
-      setError(`Search failed: ${error.message}`);
+      setError(`Search failed: ${error.message}. If this is a CORS or network error, check browser console and backend CORS settings.`);
       setSearchResults([]);
     } finally {
       setIsSearching(false);

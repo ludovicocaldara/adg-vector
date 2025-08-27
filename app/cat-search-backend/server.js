@@ -1,5 +1,6 @@
 const express = require('express');
 const oracledb = require('oracledb');
+oracledb.fetchAsBuffer = [oracledb.BLOB]; // Ensure BLOBs are returned as Buffer
 const cors = require('cors');
 require('dotenv').config();
 
@@ -43,15 +44,11 @@ app.post('/api/search', async (req, res) => {
   
   try {
     const { searchText, limit = 12 } = req.body;
-    
     if (!searchText || searchText.trim() === '') {
-      return res.status(400).json({ 
-        error: 'Search text is required' 
-      });
+      return res.status(400).json({ error: 'Search text is required' });
     }
 
     connection = await pool.getConnection();
-    
     const query = `
       SELECT c.id, 
              c.img, 
@@ -65,7 +62,6 @@ app.post('/api/search', async (req, res) => {
       ORDER BY similarity_distance ASC
       FETCH FIRST :limit ROWS ONLY
     `;
-    
     const result = await connection.execute(query, {
       searchText: searchText.trim(),
       limit: limit
@@ -74,19 +70,20 @@ app.post('/api/search', async (req, res) => {
     // Convert results to frontend format
     const searchResults = result.rows.map(row => ({
       id: row[0],
-      imageData: `data:image/jpeg;base64,${Buffer.from(row[1]).toString('base64')}`,
+      imageData: row[1]
+        ? `data:image/jpeg;base64,${row[1].toString('base64')}`
+        : null,
       imageSize: row[2],
       similarityDistance: row[3],
       similarityScore: Math.max(0, (2 - row[3]) / 2)
     }));
-    
+
     res.json({
       success: true,
       results: searchResults,
       searchText: searchText,
       resultCount: searchResults.length
     });
-    
   } catch (error) {
     console.error('❌ Search error:', error);
     res.status(500).json({
@@ -135,6 +132,11 @@ process.on('SIGINT', async () => {
   console.log('🛑 Shutting down gracefully...');
   if (pool) {
     await pool.close();
+  }
+  process.exit(0);
+});
+
+startServer().catch(console.error);
   }
   process.exit(0);
 });
