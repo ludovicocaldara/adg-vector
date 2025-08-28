@@ -137,9 +137,3 @@ process.on('SIGINT', async () => {
 });
 
 startServer().catch(console.error);
-  }
-  process.exit(0);
-});
-
-startServer().catch(console.error);
-startServer().catch(console.error);
