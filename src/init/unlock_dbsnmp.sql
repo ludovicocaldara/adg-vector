@@ -1,4 +1,6 @@
 /*
+If you want to use the OCI Observability & Management service, unlock dbsnmp before attempting to configure it.
+
 run as : SYS
 Scope  : CDB$ROOT
 */

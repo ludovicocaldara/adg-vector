@@ -1,7 +1,9 @@
 /*
 Creates the RW, RO, and SNAP services with DBMS_SERVICE.
+
 Run as : SYS
-Scope  : PDB
+Scope  : Primary PDB
+Note   : This script is automatically called by init_services.sql
 */
 DECLARE
     e_service_error EXCEPTION;

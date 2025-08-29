@@ -1,3 +1,20 @@
+/*
+This script creates a procedure that process the embeddings of the cat images.
+The embeddings are in a separate table (I find it more flexible in case you need to introduce new models or replace existing ones).
+
+It opens a cursor to generate the embeddings for cat images that still lack them, then it loops the cursor to insert them into the primary via DML redirection. The `ALTER SESSION` statement wouldn't be necessary if you set it before running the procedure, however it's included to make it always work.
+
+Note: we don't use INSERT .. SELECT as it's not supported yet with DML redirect if used in combination with VECTOR_EMBEDDING. We are working on removing this limitation (Bug 38149985).
+
+You can execute the provedure with:
+
+`execute process_embeddings (p_batch_size => 10, p_iterations => 100);`
+
+If `p_iterations` is set to 0, it loops until no images without embeddings are found.
+
+Run as : ADGVEC
+Scope  : Primary PDB
+*/
 CREATE OR REPLACE PROCEDURE process_embeddings (
     p_batch_size IN PLS_INTEGER,
     p_iterations IN PLS_INTEGER

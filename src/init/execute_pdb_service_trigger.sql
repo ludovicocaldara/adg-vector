@@ -1,7 +1,10 @@
 /*
 Starts (or stops) the services depending on the role.
+The code is the same as the trigger, but we execute it in an anonymous block to start the services without bouncing the database.
+
 Run as : SYS
-Scope  : PDB
+Scope  : Primary PDB
+Note   : This script is automatically called by init_services.sql
 */
 DECLARE
   v_service_ro    VARCHAR2(64) := rtrim(sys_context('userenv', 'db_name') || '_RO.' || sys_context('userenv', 'db_domain'), '.');

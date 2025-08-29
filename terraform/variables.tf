@@ -64,7 +64,3 @@ variable "pdb_name" {
 variable "ad_number" {
   default = "1"
 }
-
-variable "bucket_name" {
-  default = "pet-images"
-}

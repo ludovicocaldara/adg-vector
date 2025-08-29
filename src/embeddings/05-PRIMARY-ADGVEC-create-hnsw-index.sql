@@ -1,10 +1,19 @@
--- inmemory vector in this environment fails with
--- ORA-51962: The vector memory area is out of space for the current container.
--- >> must increate VECTOR_MEMORY_SIZE
+/*
+This script creates the vector index to accellerate approximate queries.
 
--- CREATE VECTOR INDEX cats_vec_clipimg_hnsw_idx ON cats_vec_clipimg (embedding)
--- ORGANIZATION INMEMORY NEIGHBOR GRAPH
--- DISTANCE COSINE WITH TARGET ACCURACY 95;
+The creation of an inmemory vector in the default BaseDB environment fails with:
+ORA-51962: The vector memory area is out of space for the current container.
+must increase VECTOR_MEMORY_SIZE
+
+CREATE VECTOR INDEX cats_vec_clipimg_hnsw_idx ON cats_vec_clipimg (embedding)
+ORGANIZATION INMEMORY NEIGHBOR GRAPH
+DISTANCE COSINE WITH TARGET ACCURACY 95;
+
+While that would be easyy to solve, we create a neighbor partition index instead, to limit the number of steps.
+
+Run as : ADGVEC
+Scope  : Primary PDB
+*/
 
 CREATE VECTOR INDEX cats_vec_clipimg_hnsw_idx ON cats_vec_clipimg (embedding)
 organization neighbor partitions 

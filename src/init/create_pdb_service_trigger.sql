@@ -1,7 +1,9 @@
 /*
 Creates the STARTUP trigger to start (or stop) the services depending on the role.
+
 Run as : SYS
-Scope  : PDB
+Scope  : Primary PDB
+Note   : This script is automatically called by init_services.sql
 */
 CREATE OR REPLACE TRIGGER service_trigger AFTER STARTUP ON DATABASE DECLARE
   v_service_ro    VARCHAR2(64) := rtrim(sys_context('userenv', 'db_name') || '_RO.' || sys_context('userenv', 'db_domain'), '.');
