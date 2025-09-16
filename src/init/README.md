@@ -29,3 +29,11 @@ srvctl add service -db adgvec -service mypdb_ro -pdb mypdb -role PHYSICAL_STANDB
 srvctl start service -db adgvec -service mypdb_rw -role
 srvctl start service -db adgvec -service mypdb_ro -role
 ```
+
+Don't forget to discard the PDB state in case it's set by default:
+
+```sql
+alter session set container=mypdb;
+alter pluggable database mypdb discard state;
+select name, aq_ha_notification, commit_outcome, session_state_consistency, failover_restore from v$active_services;
+```
