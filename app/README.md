@@ -16,7 +16,7 @@ This guide will walk you through deploying the Cat Image Search Engine that conn
 ### Install Dependencies
 
 ```bash
-cd cat-search-backend
+cd picture-search-backend
 npm install express oracledb cors dotenv multer
 npm install --save-dev nodemon
 ```
@@ -28,7 +28,7 @@ Cope `env.sample` to `.env` and adapt to with your environment.
 ## 🎨 Step 2: Frontend Setup (React)
 
 ```bash
-cd cat-search-frontend
+cd picture-search-frontend
 npm install lucide-react axios
 ```
 
@@ -36,7 +36,7 @@ npm install lucide-react axios
 
 ### Start Backend Server
 ```bash
-cd cat-search-backend
+cd picture-search-backend
 npm run dev
 ```
 
@@ -59,13 +59,13 @@ curl -X POST http://localhost:3001/api/search \
 
 ### Start Frontend
 ```bash
-cd cat-search-frontend
+cd picture-search-frontend
 npm start
 ```
 
 Visit: http://localhost:3000
 
-### Test Cases:
+### Test Cases: they depend on the image data set used!
 1. **"a cute red kitten"** - Should return orange/red cats
 2. **"fluffy white cat sleeping"** - Should return white, fluffy cats
 3. **"black cat with green eyes"** - Should return dark cats

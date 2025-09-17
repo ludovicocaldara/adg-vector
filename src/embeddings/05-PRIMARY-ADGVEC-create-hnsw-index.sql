@@ -5,7 +5,7 @@ The creation of an inmemory vector in the default BaseDB environment fails with:
 ORA-51962: The vector memory area is out of space for the current container.
 must increase VECTOR_MEMORY_SIZE
 
-CREATE VECTOR INDEX cats_vec_clipimg_hnsw_idx ON cats_vec_clipimg (embedding)
+CREATE VECTOR INDEX picture_embeddings_idx ON picture_embeddings (embedding)
 ORGANIZATION INMEMORY NEIGHBOR GRAPH
 DISTANCE COSINE WITH TARGET ACCURACY 95;
 
@@ -15,6 +15,6 @@ Run as : ADGVEC
 Scope  : Primary PDB
 */
 
-CREATE VECTOR INDEX cats_vec_clipimg_hnsw_idx ON cats_vec_clipimg (embedding)
+CREATE VECTOR INDEX picture_embeddings_idx ON picture_embeddings (embedding)
 organization neighbor partitions 
 DISTANCE EUCLIDEAN WITH TARGET ACCURACY 95;

@@ -6,16 +6,16 @@ Scope  : Primary PDB
 */
 
 -- contains cat images
-create table if not exists cats (
+create table if not exists pictures (
    id       number primary key,
    img_size number,
    img      blob
 );
 
 -- contains vector embeddings (1:1 relation with cats)
-create table if not exists cats_vec_clipimg (
+create table if not exists picture_embeddings (
    id         number,
    embedding vector,
-   constraint cats_vec_clipimg_pk primary key ( id ),
-   constraint cats_vec_clipimg_fk foreign key ( id ) references cats ( id )
+   constraint picture_embeddings_pk primary key ( id ),
+   constraint picture_embeddings_fk foreign key ( id ) references pictures ( id )
 );

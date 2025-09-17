@@ -5,9 +5,10 @@ const cors = require('cors');
 require('dotenv').config();
 
 const app = express();
+const path = require('node:path')
+
 const PORT = process.env.PORT || 3001;
 
-oracledb.initOracleClient({libDir: '/home/opc/instantclient'});
 
 // Middleware
 app.use(cors({
@@ -24,6 +25,8 @@ const dbConfig = {
   poolMin: 2,
   poolIncrement: 2
 };
+
+oracledb.initOracleClient({libDir: path.join(process.env.HOME, 'instantclient')});
 
 // Initialize Oracle connection pool
 let pool;
@@ -57,8 +60,8 @@ app.post('/api/search', async (req, res) => {
                cv.embedding, 
                VECTOR_EMBEDDING(cliptxt USING :searchText AS data)
              ) as similarity_distance
-      FROM cats c
-      JOIN cats_vec_clipimg cv ON c.id = cv.id
+      FROM pictures c
+      JOIN picture_embeddings cv ON c.id = cv.id
       ORDER BY similarity_distance ASC
       FETCH FIRST :limit ROWS ONLY
     `;

@@ -1,5 +1,5 @@
 '''
-This python script inserts all the cat images as blobs into the cats table using the oracledb driver.
+This python script inserts all the images as blobs into the pictures table using the oracledb driver.
 This could also be done directly in PL/SQL (probably much faster) by copying the images to the DB server and using DBMS_LOB.
 
 ## Usage:
@@ -9,7 +9,7 @@ Set the environment variable srequired by the script:
 export DB_USER=adgvec
 export DB_PASSWORD=<the adgvec password>
 export DB_DSN=<connect string, e.g. adgvec0-84,adgvec1-84/mypdb_rw>
-export IMAGE_DIRECTORY=<path to the cat images>
+export IMAGE_DIRECTORY=<path to the images>
 export ORACLE_HOME=<your instantclient directory>
 
 '''
@@ -45,9 +45,9 @@ with oracledb.connect(user=db_user, password=db_password, dsn=db_dsn) as connect
                     image_size = len(image_data)
 
                     try:
-                        # Insert the image data into the 'cats' table
+                        # Insert the image data into the 'pictures' table
                         cursor.execute("""
-                            INSERT INTO cats (id, img_size, img)
+                            INSERT INTO pictures (id, img_size, img)
                             VALUES (:id, :img_size, :img)""",
                             {'id': image_id, 'img_size': image_size, 'img': image_data})
                     except oracledb.IntegrityError as e:

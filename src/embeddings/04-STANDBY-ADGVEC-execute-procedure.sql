@@ -10,4 +10,4 @@ set serveroutput on
 execute process_embeddings(p_batch_size => 10 , p_iterations => 100 );
 commit;
 
-select count(*) from cats_vec_clipimg;
+select count(*) from picture_embeddings;

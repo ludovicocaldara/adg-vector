@@ -1,8 +1,8 @@
 /*
-This script creates a procedure that process the embeddings of the cat images.
+This script creates a procedure that process the embeddings of the images in the picture table.
 The embeddings are in a separate table (I find it more flexible in case you need to introduce new models or replace existing ones).
 
-It opens a cursor to generate the embeddings for cat images that still lack them, then it loops the cursor to insert them into the primary via DML redirection. The `ALTER SESSION` statement wouldn't be necessary if you set it before running the procedure, however it's included to make it always work.
+It opens a cursor to generate the embeddings for the images that still lack them, then it loops the cursor to insert them into the primary via DML redirection. The `ALTER SESSION` statement wouldn't be necessary if you set it before running the procedure, however it's included to make it always work.
 
 Note: we don't use INSERT .. SELECT as it's not supported yet with DML redirect if used in combination with VECTOR_EMBEDDING. We are working on removing this limitation (Bug 38149985).
 
@@ -20,8 +20,8 @@ CREATE OR REPLACE PROCEDURE process_embeddings (
     p_iterations IN PLS_INTEGER
 ) AS
     TYPE t_embedding IS RECORD (
-        id            cats.id%TYPE,
-        embed_vector  cats_vec_clipimg.embedding%TYPE
+        id            pictures.id%TYPE,
+        embed_vector  picture_embeddings.embedding%TYPE
     );
 
     TYPE t_embedding_table IS TABLE OF t_embedding;
@@ -34,8 +34,8 @@ CREATE OR REPLACE PROCEDURE process_embeddings (
     CURSOR c_embeddings IS
         SELECT c.id,
                vector_embedding(clipimg USING img AS data) AS embed_vector
-        FROM cats c
-        LEFT OUTER JOIN cats_vec_clipimg v ON c.id = v.id
+        FROM pictures c
+        LEFT OUTER JOIN picture_embeddings v ON c.id = v.id
         WHERE v.id IS NULL AND c.img IS NOT NULL and c.id IS NOT NULL;
 BEGIN
     OPEN c_embeddings;
@@ -48,7 +48,7 @@ BEGIN
 
         FOR i IN v_embeddings.FIRST .. v_embeddings.LAST LOOP
             DBMS_OUTPUT.PUT_LINE(   'Processing ID: ' || v_embeddings(i).id);
-            INSERT INTO cats_vec_clipimg (id, embedding)
+            INSERT INTO picture_embeddings (id, embedding)
             VALUES (v_embeddings(i).id, v_embeddings(i).embed_vector);
         END LOOP;
         COMMIT;

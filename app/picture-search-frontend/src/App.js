@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { Search, Image, Loader2, Heart, Download } from 'lucide-react';
+import { Search, Image, Loader2, } from 'lucide-react';
 import './App.css';
 
-const CatImageSearch = () => {
+const PictureSearch = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [isSearching, setIsSearching] = useState(false);
   const [searchResults, setSearchResults] = useState([]);
@@ -48,7 +48,7 @@ const CatImageSearch = () => {
           imageSize: result.imageSize,
           similarityDistance: result.similarityDistance,
           similarity: result.similarityScore,
-          description: `Cat #${result.id} (${(result.imageSize / 1024).toFixed(1)}KB)`
+          description: `Picture #${result.id} (${(result.imageSize / 1024).toFixed(1)}KB)`
         }));
         setSearchResults(formattedResults);
       } else {
@@ -71,11 +71,11 @@ const CatImageSearch = () => {
     performSearch(searchQuery);
   };
 
-  const getCatImage = (cat) => {
+  const getPicture = (picture) => {
     // If imageData already starts with 'data:', return as is
-    if (cat.imageData.startsWith('data:')) return cat.imageData;
+    if (picture.imageData.startsWith('data:')) return picture.imageData;
     // Otherwise, assume JPEG and prepend the data URL prefix
-    return `data:image/jpeg;base64,${cat.imageData}`;
+    return `data:image/jpeg;base64,${picture.imageData}`;
   };
 
   return (
@@ -88,7 +88,7 @@ const CatImageSearch = () => {
             Offload AI Vector Search (and more) on Active Data Guard
           </h1>
           <p className="text-gray-600 text-lg">
-            Cat image search using natural language descriptions
+            Picture search using natural language descriptions
           </p>
         </div>
 
@@ -100,7 +100,7 @@ const CatImageSearch = () => {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && handleSearch(e)}
-              placeholder="Describe the cat you're looking for... (e.g., 'a cute red kitten')"
+              placeholder="Describe the picture you're looking for... (e.g., 'a cute red kitten')"
               className="w-full px-6 py-4 text-lg border-2 border-purple-200 rounded-xl focus:border-purple-500 focus:outline-none shadow-lg"
               style={{ marginBottom: '0.5rem' }}
               size={60}
@@ -144,31 +144,35 @@ const CatImageSearch = () => {
                 alignItems: 'stretch'
               }}
             >
-              {searchResults.map((cat) => (
+              {searchResults.map((picture) => (
                 <div
-                  key={cat.id}
+                  key={picture.id}
                   className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition-shadow duration-300 flex flex-col"
                   style={{ margin: 'auto', maxWidth: 400, height: '100%' }}
                 >
                   <div className="relative">
                     <img
-                      src={getCatImage(cat)}
-                      alt={`Cat ${cat.id}`}
-                      className="w-full h-64 object-cover"
-                      style={{ objectPosition: 'center' }}
+                      src={getPicture(picture)}
+                      alt={`Picture ${picture.id}`}
+                      className="w-full h-64 object-contain"
+                      style={{ objectPosition: 'center' ,
+                        maxWidth: "300px",
+                        maxHeight: "300px",
+                        margin: "0 auto",
+                      }}
                     />
                   </div>
                   <div className="p-5 flex-1 flex flex-col justify-between">
                     <h3 className="font-semibold text-gray-800 mb-2 text-lg">
-                      {cat.description}
+                      {picture.description}
                     </h3>
                     <div className="text-sm text-gray-600 mb-3">
-                      <div>Distance: {cat.similarityDistance?.toFixed(4)}</div>
-                      <div>Similarity: {((cat.similarity || 0) * 100).toFixed(1)}%</div>
+                      <div>Distance: {picture.similarityDistance?.toFixed(4)}</div>
+                      <div>Similarity: {((picture.similarity || 0) * 100).toFixed(1)}%</div>
                     </div>
                     <div className="flex items-center justify-between mt-auto">
                       <div className="text-xs text-gray-500">
-                        Size: {(cat.imageSize / 1024).toFixed(1)} KB
+                        Size: {(picture.imageSize / 1024).toFixed(1)} KB
                       </div>
                     </div>
                   </div>
@@ -195,21 +199,21 @@ const CatImageSearch = () => {
         {searchResults.length === 0 && !searchQuery && !error && (
           <div className="bg-white rounded-xl shadow-lg p-8 my-10">
             <h2 className="text-2xl font-semibold text-gray-800 mb-4">
-              How to use the Cat Image Search
+              How to use the Picture Search
             </h2>
             <div className="space-y-4 text-gray-600">
               <p>
-                This search engine relies on Oracle Database 23ai ONNX runtime to convert the search text to a vector embedding. It uses then AI Vector search with EXACT distance calculation to find cat images that match the input text.<br />
+                This search engine relies on Oracle Database 23ai ONNX runtime to convert the search text to a vector embedding. It uses then AI Vector search with EXACT distance calculation to find pictures that match the input text.<br />
                 Simply type what you're looking for in natural language!
               </p>
               <div className="grid md:grid-cols-2 gap-4 mt-6">
                 <div>
                   <h3 className="font-semibold text-gray-800 mb-2">Example searches:</h3>
                   <ul className="space-y-1 text-sm">
-                    <li>"a cute red kitten"</li>
-                    <li>"fluffy white cat sleeping"</li>
-                    <li>"black and white cat looking angry"</li>
-                    <li>"tabby cat playing with toy"</li>
+                    <li>"beautiful wildlife"</li>
+                    <li>"lake and forest"</li>
+                    <li>"mountains and snow"</li>
+                    <li>"colorful flowers"</li>
                   </ul>
                 </div>
                 <div>
@@ -233,12 +237,12 @@ const CatImageSearch = () => {
             🚀 Connected to Oracle Database
           </h3>
           <p className="text-green-700 text-sm">
-            This application is now connected to your Oracle database
+            This application is now connected to an Oracle Active Data Guard database
           </p>
           <ul className="text-green-700 text-sm mt-2 space-y-1">
             <li><code>mypdb_ro</code> is the read-only service running on the Active Data Guard standby database</li>
-            <li>The <code>cats</code> table has a BLOB column containing cat images</li>
-            <li>The <code>cats_vec_clipimg</code> table: contains the embeddings generated with the model <code>clip-img</code> for semantic search</li>
+            <li>The <code>pictures</code> table has a BLOB column containing pictures</li>
+            <li>The <code>picture_embeddings</code> table: contains the embeddings generated with the model <code>clip-img</code> for semantic search</li>
             <li>The query uses <code>VECTOR_EMBEDDING()</code> for the search text embedding generation</li>
             <li>It uses then <code>VECTOR_DISTANCE()</code> for similarity calculation</li>
             <li>The results are ordered by vector distance</li>
@@ -249,5 +253,5 @@ const CatImageSearch = () => {
   );
 };
 
-export default CatImageSearch;
+export default PictureSearch;
 
