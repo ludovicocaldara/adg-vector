@@ -2,10 +2,10 @@
 
 This lab uses a standby database with Active Data Guard to:
 
-* Load cat images on the primary database
+* Load images on the primary database
 * Load an ONNX multi-modal model (text, images) on the primary database
 * Run embedding generation on the standby database and insert the vectors through DML redirection
-* Bonus: a React app allows searching cat images with semantic search
+* Bonus: a React app allows searching images with semantic search
 
 To demonstrate that the embedding generation doesn't run on the primary database, the primary and standby PDBs can be configured with Observability & Monitoring service to show the load happenind on the standby database. You can use any alternative method to verify the load happens on the standby instead of the primary (e.g. top, Enterprise Manager, ASH, select from v$session, etc.)
 
@@ -101,5 +101,5 @@ To demonstrate that the embedding generation doesn't run on the primary database
 
 ### Configure and start the React application
 
-The `app/` directory contains the React application to search cat images. Refer to [app/README.md](app/README.md) for the instructions.
+The `app/` directory contains the React application to search images. Refer to [app/README.md](app/README.md) for the instructions.
 ![cat search app in action](doc/images/cat-search.gif)
