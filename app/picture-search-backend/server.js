@@ -61,7 +61,7 @@ app.post('/api/search', async (req, res) => {
                VECTOR_EMBEDDING(cliptxt USING :searchText AS data)
              ) as similarity_distance
       FROM pictures c
-      JOIN picture_embeddings cv ON c.id = cv.id
+      JOIN picture_embeddings_populated cv ON c.id = cv.id
       ORDER BY similarity_distance ASC
       FETCH FIRST :limit ROWS ONLY
     `;

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { Search, Image, Loader2, } from 'lucide-react';
+import { X, Search, Image, Loader2, } from 'lucide-react';
 import './App.css';
+import './output.css';
 
 const PictureSearch = () => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -19,7 +20,7 @@ const PictureSearch = () => {
     setError(null);
 
     try {
-      const response = await fetch('http://localhost:3001/api/search', {
+      const response = await fetch('/api/search', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -79,13 +80,12 @@ const PictureSearch = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 to-pink-50 p-4">
+    <div className="min-h-screen bg-white p-4">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="text-center mb-10 mt-6">
           <h1 className="text-4xl md:text-5xl font-bold text-gray-800 mb-2 flex items-center justify-center gap-2">
-            <Image className="text-purple-600" />
-            Offload AI Vector Search (and more) on Active Data Guard
+            Offload AI Vector Search (and more) on Oracle Active Data Guard
           </h1>
           <p className="text-gray-600 text-lg">
             Picture search using natural language descriptions
@@ -101,14 +101,23 @@ const PictureSearch = () => {
               onChange={(e) => setSearchQuery(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && handleSearch(e)}
               placeholder="Describe the picture you're looking for... (e.g., 'a cute red kitten')"
-              className="w-full px-6 py-4 text-lg border-2 border-purple-200 rounded-xl focus:border-purple-500 focus:outline-none shadow-lg"
+              className="w-full px-6 py-4 text-lg border-2 border-oracle rounded-xl focus:border-oracle focus:outline-none shadow-lg"
               style={{ marginBottom: '0.5rem' }}
               size={60}
             />
+	    {/* Clear "X" button */}
+            {searchQuery && (
+              <button
+                onClick={() => setSearchQuery("")}
+                className="absolute right-12 top-2 p-2 text-gray-500 hover:text-black transition-colors"
+              >
+                <X size={20} />
+              </button>
+            )}
             <button
               onClick={handleSearch}
               disabled={isSearching || !searchQuery.trim()}
-              className="absolute right-2 top-2 p-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              className="absolute right-2 top-2 p-2 bg-oracle text-white rounded-lg hover:bg-oracle disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
               {isSearching ? (
                 <Loader2 className="animate-spin" size={24} />
@@ -122,7 +131,7 @@ const PictureSearch = () => {
         {/* Error Message */}
         {error && (
           <div className="mb-6 max-w-2xl mx-auto">
-            <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
+            <div className="bg-red-50 border border-oracle text-oracle px-4 py-3 rounded-lg">
               <strong>Error:</strong> {error}
               <br />
               <small>Make sure your backend server is running on http://localhost:3001</small>
@@ -153,7 +162,7 @@ const PictureSearch = () => {
                   <div className="relative">
                     <img
                       src={getPicture(picture)}
-                      alt={`Picture ${picture.id}`}
+                      alt={`#${picture.id}`}
                       className="w-full h-64 object-contain"
                       style={{ objectPosition: 'center' ,
                         maxWidth: "300px",
@@ -232,14 +241,14 @@ const PictureSearch = () => {
         )}
 
         {/* Database Integration Note */}
-        <div className="mt-10 bg-green-50 border border-green-200 rounded-xl p-6">
-          <h3 className="text-lg font-semibold text-green-800 mb-2">
+        <div className="mt-10 bg-aiw25-lightblue border border-aiw25-blue rounded-xl p-6">
+          <h3 className="text-lg font-semibold text-aiw25-blue mb-2">
             🚀 Connected to Oracle Database
           </h3>
-          <p className="text-green-700 text-sm">
-            This application is now connected to an Oracle Active Data Guard database
+          <p className="text-aiw25-blue text-sm">
+            This application is now connected to an <b>Oracle Active Data Guard database</b>
           </p>
-          <ul className="text-green-700 text-sm mt-2 space-y-1">
+          <ul class="list-inside list-disc text-aiw25-blue">
             <li><code>mypdb_ro</code> is the read-only service running on the Active Data Guard standby database</li>
             <li>The <code>pictures</code> table has a BLOB column containing pictures</li>
             <li>The <code>picture_embeddings</code> table: contains the embeddings generated with the model <code>clip-img</code> for semantic search</li>
