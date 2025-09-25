@@ -100,7 +100,7 @@ const PictureSearch = () => {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && handleSearch(e)}
-              placeholder="Describe the picture you're looking for... (e.g., 'a cute red kitten')"
+              placeholder="Describe the picture you're looking for... (e.g., 'a cute blue bird')"
               className="w-full px-6 py-4 text-lg border-2 border-oracle rounded-xl focus:border-oracle focus:outline-none shadow-lg"
               style={{ marginBottom: '0.5rem' }}
               size={60}
